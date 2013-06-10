@@ -63,3 +63,39 @@ function toggleSettings(opt) {
     // push new value to display
     dispval.textContent = newval.textContent;
 };
+
+/*
+ * navigation bar - dynamic loading of pages
+ */
+function loadItem(event)
+{
+  var id = event.navigationItemId;
+	log("Nav Event Id: " + id);
+	var item = document.getElementById(id);
+  var url = item.getElementByTagName('url').textContent;
+  loadMenuPages(url, event);
+};
+
+function loadMenuPages(url, event)
+{
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function()
+  {
+    try
+    {
+			if(req.readyState == 4)
+      {
+        doc = req.responseXML
+        if(event) event.success(doc);
+          else atv.loadXML(doc);
+      }
+    }
+    catch(e)
+    {
+      req.abort();
+    }
+  }
+  req.open('GET', url, true);
+  req.send();
+};
+
